@@ -71,11 +71,6 @@ def download_product(bucket, prefix: str, tile_id: str, target_root: str):
             product_name = os.path.basename(product_prefix.rstrip('/'))
             local_target = os.path.join(target_root, product_name)
 
-            # Si ya está descargado, no repetir
-            if os.path.exists(local_target):
-                print(f"El producto {product_name} ya existe en {local_target}. Saltando descarga.")
-                return None
-
             print(f"Producto encontrado: {product_prefix}")
             print(f"Descargando a {local_target}")
 
@@ -95,6 +90,17 @@ def download_product(bucket, prefix: str, tile_id: str, target_root: str):
         print(f"No se encontró producto SAFE con tile {tile_id} en {prefix}")
     return None
 
+def producto_ya_descargado(output_dir, fecha_str):
+    """
+    Recorre todos los archivos/carpeta en output_dir y devuelve True
+    si encuentra algún archivo/carpeta que contenga '_YYYYMMDDT'
+    """
+    buscar = f"_{fecha_str.replace('-', '')}T"  # convierte 'YYYY-MM-DD' → 'YYYYMMDDT'
+    for root, dirs, files in os.walk(output_dir):
+        for name in dirs + files:
+            if buscar in name:
+                return True
+    return False
 
 
 def main():
@@ -107,6 +113,12 @@ def main():
         # probar cada patrón en orden
         for pattern in prefix_patterns:
             prefix = pattern.format(y=fecha.year, m=fecha.month, d=fecha.day)
+            
+	    # Nuevo check de si ya se descargó
+            if producto_ya_descargado(output_dir, fecha.strftime("%Y-%m-%d")):
+                print(f"El producto para {fecha} ya está descargado. Saltando.")
+                break  # pasa a la siguiente fecha
+            
             print(f"Buscando productos en: {prefix}")
 
             result = download_product(bucket, prefix, tile_id, output_dir)

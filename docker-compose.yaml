@@ -1,0 +1,10 @@
+services:
+  chlpipeline:
+    build: .
+    image: chlpipeline
+    env_file: .env
+    volumes:
+      - ./data/Chl_Maps:/app/data/Chl_Maps
+    stdin_open: true     
+    tty: true            
+
