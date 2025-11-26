@@ -19,21 +19,6 @@ If you wish for the container to be removed after exiting the terminal, run:
 docker compose run --rm chlpipeline
 ```
 
-### Docker Compose File
-- `docker compose run` creates and runs a new container from the `chlpipeline` image.
-   The `stdin_open:True` flag, keeps the standard input (stdin) open even if no terminal is attached. The `tty:True` flag allocates a terminal (tty) to the container so it can be used like a shell.  
-- `env_file:.env` loads environment variables into the container, in this case from a `.env` file.
-   This file contains the credentials for [S3](https://eodata-s3keysmanager.dataspace.copernicus.eu/), used to download images from the ESA, as well as client id and secret to check cloud coverage, obtained from [Copernicus](https://shapps.dataspace.copernicus.eu/dashboard/#/account/settings), in the OAuth clients section.
-   It includes the access and secret keys:
-  - `S3_ACCESS_KEY=...`
-  - `S3_SECRET_KEY=...`
-  - `CDS_ID=...`
-  - `CDS_SECRET=...`
-     These variables can be accessed inside the container with `echo $VARIABLE`.
-  
-- `volumes` mounts volumes, where `$(pwd)/data/Chl_Maps` is the path on the local machine (with `pwd` pointing to the current directory), and `/app/data/Chl_Maps` is the path inside the container.
-   This links the folder inside the container with the corresponding local folder.
-
 Once inside the container, the terminal prompt will look something like `root@5f29d3e806ac:/app#`. From there, simply run:
 
 ```
@@ -48,6 +33,23 @@ python3 check_dates.py --startdate 2025-10-01 --enddate 2025-10-16
 ```
 
 to check cloud coverage in a date interval. This consults the data catalog, but the properties specified there are not always accurate. Therefore, additional confirmation through visual inspection in the Copernicus Browser is also recommended.
+
+
+### Docker Compose File
+- `docker compose run` creates and runs a new container from the `chlpipeline` image.
+-  The `stdin_open:True` flag, keeps the standard input (stdin) open even if no terminal is attached. 
+-  The `tty:True` flag allocates a terminal (tty) to the container so it can be used like a shell.
+- `env_file:.env` loads environment variables into the container, in this case from a `.env` file.
+   This file contains the credentials for [S3](https://eodata-s3keysmanager.dataspace.copernicus.eu/), used to download images from the ESA, as well as client id and secret to check cloud coverage, obtained from [Copernicus](https://shapps.dataspace.copernicus.eu/dashboard/#/account/settings), in the OAuth clients section.
+   It includes the access and secret keys:
+  - `S3_ACCESS_KEY=...`
+  - `S3_SECRET_KEY=...`
+  - `CDS_ID=...`
+  - `CDS_SECRET=...`
+     These variables can be accessed inside the container with `echo $VARIABLE`.
+  
+- `volumes` mounts volumes, where `$(pwd)/data/Chl_Maps` is the path on the local machine (with `pwd` pointing to the current directory), and `/app/data/Chl_Maps` is the path inside the container.
+   This links the folder inside the container with the corresponding local folder.
 
 ## Description
 
