@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     openjdk-11-jdk gdal-bin tk-dev liblzma-dev \
     && apt-get clean
 
+
 # === Instalar Python 3.8.5 desde fuente ===
 WORKDIR /tmp
 RUN wget https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tgz && \
@@ -34,6 +35,15 @@ RUN wget -O /tmp/snap_installer_12.sh "https://download.esa.int/step/snap/12.0/i
     chmod +x /tmp/snap_installer_12.sh && \
     /tmp/snap_installer_12.sh -q -dir /opt/snap && \
     rm /tmp/snap_installer_12.sh
+
+# === SNAP auxdata: Geoid EGM96 (ww15mgh) ===
+RUN mkdir -p /root/.snap/auxdata/dem/egm96 && \
+    wget -q -O /root/.snap/auxdata/dem/egm96/ww15mgh_b.zip \
+        http://step.esa.int/auxdata/dem/egm96/ww15mgh_b.zip && \
+    unzip -o /root/.snap/auxdata/dem/egm96/ww15mgh_b.zip \
+        -d /root/.snap/auxdata/dem/egm96 && \
+    rm /root/.snap/auxdata/dem/egm96/ww15mgh_b.zip
+
 
 # === Crear estructura del proyecto ===
 WORKDIR /app

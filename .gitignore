@@ -1,0 +1,7 @@
+# Datos grandes de Sentinel
+data/Copernicus/
+*.SAFE.zip
+*.SAFE
+data/processed
+*.zip
+*.tif

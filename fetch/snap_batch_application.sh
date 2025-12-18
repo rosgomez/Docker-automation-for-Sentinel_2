@@ -6,10 +6,12 @@ INPUT_DIR=$2
 OUTPUT_DIR=$3
 
 # === Configuración del grafo y GPT ===
-GRAPH_XML="/app/fetch/snap_graph_application.xml"
-TEMPLATE_PARAMS="/app/fetch/snap_graph_application.properties"
-GPT="/opt/snap/bin/gpt"
-OUTPUT_FORMAT="tif"
+CONFIG_FILE="/app/config.yaml"
+GRAPH_XML=$(yq '.batch_processing.graph_xml' "$CONFIG_FILE")
+TEMPLATE_PARAMS=$(yq '.batch_processing.template_params' "$CONFIG_FILE")
+GPT=$(yq '.batch_processing.gpt_bin' "$CONFIG_FILE")
+OUTPUT_FORMAT=$(yq '.batch_processing.output_format' "$CONFIG_FILE")
+net=$(yq 'batch_processing.netSet' "$TEMPLATE_PARAMS")
 
 # === Validaciones ===
 if [ -z "$FECHA" ] || [ -z "$INPUT_DIR" ] || [ -z "$OUTPUT_DIR" ]; then
@@ -56,7 +58,7 @@ for input_file in "$INPUT_DIR"/*.SAFE.zip; do
     fi
 
     # Leer el tipo de red desde la plantilla
-    net=$(grep "^netSet=" "$TEMPLATE_PARAMS" | cut -d= -f2 | tr -d '[:space:]')
+    # net=$(grep "^netSet=" "$TEMPLATE_PARAMS" | cut -d= -f2 | tr -d '[:space:]')
     if [[ "$net" == "C2X-COMPLEX-Nets" ]]; then
         suffix="C2XComplexNets"
     elif [[ "$net" == "C2X-Nets" ]]; then

@@ -19,12 +19,14 @@ If you wish for the container to be removed after exiting the terminal, run:
 docker compose run --rm chlpipeline
 ```
 
-Once inside the container, the terminal prompt will look something like `root@5f29d3e806ac:/app#`. From there, simply run:
+Once inside the container, the terminal prompt will look something like `root@5f29d3e806ac:/app#`. You may now begin to process images. The pipeline will always check wether the desired dates exist in the Sentinel-2 database. To indicate desired dates, you may use:
+- `--cloudcover $NUM`|| `-cc $NUM`: sets the max ammount of cloud coverage desired in the images selected (100% by default).
+- `--date`: will run the pipeline for a single date.
+- `--startdate $DATE --enddate $DATE` || `-sd $DATE -ed $DATE`: will search for photographed dates within the range given and will run the pipeline for all of them.
+- `--configdates` || `-cd`: will utilize the list of dates defined in config.yaml to run the pipeline.
 
-```
-python3 run_pipeline.py --date 2022-07-14
-```
-The only parameter that needs to be specified is the desired date, formated as `%YYYY-%mm-%dd`.
+You may also require the use of a different config file. To do so, use the parameter `--config $FILE`.
+
 
 It is recommended to check that the area of interest is not cloud-covered on that date. For that purpose, the user can use another script, also within the container, like the following:
 

@@ -197,24 +197,26 @@ for d in dates:
     print(f"\nProcesando el día {d}")
     # === [0] Inicio del pipeline ===
     t_start = time.time()
-
+    """
     print(f"\n=== [1] Descargando producto para {d} ===")
     t1 = time.time()
+    subprocess.run(["python3", "fetch/productFetcher.py", "--date", d, "--output", safe_dir], check=True)
     try:
         subprocess.run(["python3", "fetch/productFetcher.py", "--date", d, "--output", safe_dir], check=True)
     except subprocess.CalledProcessError:
         print("No se encontraron productos para esa fecha. El pipeline se detendrá.")
         sys.exit(1)
+    
     subprocess.run(["python3", "fetch/productFetcher_tozip.py", "--date", d, "--input", safe_dir], check=True)
     t2 = time.time()
     print(f"Tiempo transcurrido [1]: {t2 - t1:.2f} s")
-
+    """
     print(f"\n=== [2] Aplicando corrección atmosférica con SNAP ===")
     t3 = time.time()
-    subprocess.run(["bash", "fetch/snap_batch_application.sh", d, safe_dir, snap_dir], check=True)
+    subprocess.run(["python3", "fetch/snap_batch_application.py", d, safe_dir, snap_dir], check=True)
     t4 = time.time()
     print(f"Tiempo transcurrido [2]: {t4 - t3:.2f} s")
-"""
+"""    
 
 
     print(f"\n=== [3] Ejecutando modelos de predicción ===")

@@ -106,7 +106,7 @@ def producto_ya_descargado(output_dir, fecha_str):
 def main():
     os.makedirs(output_dir, exist_ok=True)
     productos_encontrados = []
-
+    print(fechas)
     for fecha in fechas:
         print(f"\nProcesando fecha {fecha.strftime('%Y-%m-%d')}")
 
@@ -125,16 +125,9 @@ def main():
             if result:
                 productos_encontrados.append(result)
                 break  # rompe el bucle interno si se encontró algo
-        else:
-            # Este else del for se ejecuta solo si NO se ejecutó 'break'
-            print(f"No se encontró ningún producto para la fecha {fecha.strftime('%Y-%m-%d')} en ninguno de los prefijos.")
 
-    if productos_encontrados:
-        print(f"\nSe descargó el producto para la fecha buscada.")
-        sys.exit(0)
-    else:
-        print("\nNo se descargó ningún producto.")
-        sys.exit(1)
+
+    sys.exit(0)
 
 
 if __name__ == "__main__":
